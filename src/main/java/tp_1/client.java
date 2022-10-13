@@ -16,7 +16,21 @@ public class client {
         client client1 = new client("Client1", "192.168.1.9", 8003, "HTTP");
         client1.afficher();
         client1.envoyer();
+    }
 
+    // ==================== Attributs ====================
+    private String nom;
+    private String adresseIP;
+    private int port;
+    private String protocole;
+
+    // ==================== Constructeur ====================
+    public client(String nom, String adresseIP, int port, String protocole) {
+        this.nom = nom;
+        this.adresseIP = adresseIP;
+        this.port = port;
+        this.protocole = protocole;
+    }
 
     // ==================== GETTERS & SETTERS ====================
     public String getNom() {
