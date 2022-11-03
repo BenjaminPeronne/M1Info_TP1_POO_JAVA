@@ -8,14 +8,29 @@
 
 package tp_1;
 
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.Scanner;
 
 public class client {
     public static void main(String[] args) {
-        client client1 = new client("Client1", "192.168.1.9", 8003, "HTTP");
+        // Création du client
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Saisir le nom du client : ");
+        String nom = sc.nextLine();
+
+        // // Création du client
+        client client1 = new client(nom, "192.168.1.9", 8003, "HTTP");
+
         client1.afficher();
-        client1.envoyer();
+
+        while (!client1.envoyerMessage()) {
+        }
+
+        sc.close();
     }
 
     // ==================== Attributs ====================
@@ -36,6 +51,9 @@ public class client {
     // public String getNom() {
     // return this.nom;
     // }
+    public String getNom() {
+        return this.nom;
+    }
 
     // public void setNom(String nom) {
     // this.nom = nom;
@@ -73,14 +91,14 @@ public class client {
         System.out.println("Protocole : " + this.protocole);
     }
 
-    public void envoyer(String msg) { // Envoie un message au serveur
+    public void envoyerObjet(Object objet) {
         try {
             Socket socket = new Socket(this.adresseIP, this.port);
 
             OutputStream os = socket.getOutputStream();
             ObjectOutputStream oos = new ObjectOutputStream(os);
 
-            oos.writeObject(msg);
+            oos.writeObject(objet);
             oos.flush();
 
             InputStream is = socket.getInputStream();
@@ -102,14 +120,15 @@ public class client {
     public boolean envoyerMessage() { // Demande à l'utilisateur de saisir un message et l'envoie au serveur
         Scanner sc = new Scanner(System.in);
         System.out.println("Saisir un message : ");
-        String msg = sc.nextLine();
+        String message = sc.nextLine();
 
-        if (msg.equals("exit")) {
-            System.out.println("Exit en cours...");
+        if (message.equals("exit")) {
+            sc.close();
             return true;
-        } else {
-            this.envoyer(msg);
-            return false;
         }
+
+        this.envoyerObjet(message);
+
+        return false;
     }
 }
