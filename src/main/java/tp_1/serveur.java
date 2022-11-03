@@ -14,6 +14,8 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 public class serveur {
     public static void main(String[] args) {
@@ -42,13 +44,13 @@ public class serveur {
     }
 
     // ==================== GETTERS & SETTERS ====================
-    // public String getNom() {
-    // return this.nom;
-    // }
+    public String getNom() {
+        return this.nom;
+    }
 
-    // public void setNom(String nom) {
-    // this.nom = nom;
-    // }
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
 
     // public String getAdresseIP() {
     // return this.adresseIP;
@@ -125,45 +127,59 @@ public class serveur {
         }
     }
 
-    public class WorkerRunnable implements Runnable { // Classe interne pour gérer les clients
+    // ==================== Classe interne ====================
+
+    public static class WorkerRunnable implements Runnable { // Classe interne pour gérer les threads
+
         protected Socket clientSocket = null;
         protected String serverText = null;
 
-        public WorkerRunnable(Socket clientSocket, String serverText) { // Constructeur
+        public WorkerRunnable(Socket clientSocket, String serverText) {
             this.clientSocket = clientSocket;
             this.serverText = serverText;
         }
 
         public void run() {
+            List<serveur> listeObjets = new ArrayList<serveur>();
             try {
                 InputStream input = clientSocket.getInputStream();
+                OutputStream output = clientSocket.getOutputStream();
                 ObjectInputStream ois = new ObjectInputStream(input);
-
-                // Récupération de l'objet
-                // Object objet = ois.readObject();
-                // System.out.println("Objet reçu : " + objet);
+                ObjectOutputStream oos = new ObjectOutputStream(output);
 
                 String message = (String) ois.readObject();
-                System.out.println(
-                        "Message reçu : " + message + " de " + clientSocket.getInetAddress().getHostAddress());
+                System.out.println("Message reçu : " + message);
 
-                OutputStream output = clientSocket.getOutputStream();
-                ObjectOutputStream oos = new ObjectOutputStream(output);
-            
-                // Envoi d'un message de confirmation au client
-                oos.writeObject("Envoi effectué avec succès");
-                oos.flush();
+                if (message.equals("GET")) {
+                    oos.writeObject(listeObjets);
+                    oos.flush();
+                } else if (message.equals("POST")) {
+                    serveur objet = (serveur) ois.readObject();
+                    listeObjets.add(objet);
+                    oos.writeObject("Objet ajouté");
+                    oos.flush();
+                } else if (message.equals("PUT")) {
+                    serveur objet = (serveur) ois.readObject();
+                    listeObjets.set(listeObjets.indexOf(objet), objet);
+                    oos.writeObject("Objet modifié");
+                    oos.flush();
+                } else if (message.equals("DELETE")) {
+                    serveur objet = (serveur) ois.readObject();
+                    listeObjets.remove(objet);
+                    oos.writeObject("Objet supprimé");
+                    oos.flush();
+                } else {
+                    oos.writeObject("Commande inconnue");
+                    oos.flush();
+                }
 
-                // Fermeture des flux
                 ois.close();
                 oos.close();
-
-                // Fermeture de la connexion
+                input.close();
+                output.close();
+                System.out.println("Fermeture du socket client");
                 clientSocket.close();
-            } catch (
-
-            Exception e) {
-                // report exception somewhere.
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
