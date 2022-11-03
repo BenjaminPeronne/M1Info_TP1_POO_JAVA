@@ -42,16 +42,37 @@ public class serveur {
     }
 
     // ==================== GETTERS & SETTERS ====================
+    // public String getNom() {
+    // return this.nom;
+    // }
 
     // public void setNom(String nom) {
     // this.nom = nom;
     // }
 
+    // public String getAdresseIP() {
+    // return this.adresseIP;
+    // }
 
+    // public void setAdresseIP(String adresseIP) {
+    // this.adresseIP = adresseIP;
+    // }
 
+    // public int getPort() {
+    // return this.port;
+    // }
 
+    // public void setPort(int port) {
+    // this.port = port;
+    // }
 
+    // public String getProtocole() {
+    // return this.protocole;
+    // }
 
+    // public void setProtocole(String protocole) {
+    // this.protocole = protocole;
+    // }
 
     // ==================== Méthodes ====================
     public void afficher() { // Affiche les informations du serveur
@@ -72,21 +93,22 @@ public class serveur {
                 clientSocket = this.serverSocket.accept();
             } catch (Exception e) {
                 if (isStopped()) {
-                    System.out.println("Server Stopped.");
+                    System.out.println("Serveur arrêté.");
                     return;
                 }
-                throw new RuntimeException("Error accepting client connection", e);
+                throw new RuntimeException("Erreur lors de l'acceptation de la connexion client", e);
             }
-            new Thread(new WorkerRunnable(clientSocket, "Multithreaded Server")).start();
+            new Thread(new WorkerRunnable(clientSocket, "Multithreaded Server")).start(); // Création d'un thread pour
+                                                                                          // chaque client
         }
         System.out.println("Serveur arrêté.");
     }
 
-    private synchronized boolean isStopped() {
+    private synchronized boolean isStopped() { // Vérifie si le serveur est arrêté ou non
         return this.isStopped;
     }
 
-    public synchronized void stop() {
+    public synchronized void stop() { // Arrête le serveur et ferme le socket
         this.isStopped = true;
         try {
             this.serverSocket.close();
@@ -103,12 +125,11 @@ public class serveur {
         }
     }
 
-    public class WorkerRunnable implements Runnable {
-
+    public class WorkerRunnable implements Runnable { // Classe interne pour gérer les clients
         protected Socket clientSocket = null;
         protected String serverText = null;
 
-        public WorkerRunnable(Socket clientSocket, String serverText) {
+        public WorkerRunnable(Socket clientSocket, String serverText) { // Constructeur
             this.clientSocket = clientSocket;
             this.serverText = serverText;
         }
@@ -128,7 +149,7 @@ public class serveur {
 
                 OutputStream output = clientSocket.getOutputStream();
                 ObjectOutputStream oos = new ObjectOutputStream(output);
-
+            
                 // Envoi d'un message de confirmation au client
                 oos.writeObject("Envoi effectué avec succès");
                 oos.flush();
@@ -139,7 +160,9 @@ public class serveur {
 
                 // Fermeture de la connexion
                 clientSocket.close();
-            } catch (Exception e) {
+            } catch (
+
+            Exception e) {
                 // report exception somewhere.
                 e.printStackTrace();
             }
