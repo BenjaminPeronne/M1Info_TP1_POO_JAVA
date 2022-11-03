@@ -33,58 +33,34 @@ public class client {
     }
 
     // ==================== GETTERS & SETTERS ====================
-    public String getNom() {
-        return this.nom;
-    }
     // public String getNom() {
     // return this.nom;
     // }
 
-    public void setNom(String nom) {
-        this.nom = nom;
-    }
     // public void setNom(String nom) {
     // this.nom = nom;
     // }
 
-    public String getAdresseIP() {
-        return this.adresseIP;
-    }
     // public String getAdresseIP() {
     // return this.adresseIP;
     // }
 
-    public void setAdresseIP(String adresseIP) {
-        this.adresseIP = adresseIP;
-    }
     // public void setAdresseIP(String adresseIP) {
     // this.adresseIP = adresseIP;
     // }
 
-    public int getPort() {
-        return this.port;
-    }
     // public int getPort() {
     // return this.port;
     // }
 
-    public void setPort(int port) {
-        this.port = port;
-    }
     // public void setPort(int port) {
     // this.port = port;
     // }
 
-    public String getProtocole() {
-        return this.protocole;
-    }
     // public String getProtocole() {
     // return this.protocole;
     // }
 
-    public void setProtocole(String protocole) {
-        this.protocole = protocole;
-    }
     // public void setProtocole(String protocole) {
     // this.protocole = protocole;
     // }
