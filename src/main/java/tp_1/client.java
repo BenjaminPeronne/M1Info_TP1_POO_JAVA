@@ -36,34 +36,58 @@ public class client {
     public String getNom() {
         return this.nom;
     }
+    // public String getNom() {
+    // return this.nom;
+    // }
 
     public void setNom(String nom) {
         this.nom = nom;
     }
+    // public void setNom(String nom) {
+    // this.nom = nom;
+    // }
 
     public String getAdresseIP() {
         return this.adresseIP;
     }
+    // public String getAdresseIP() {
+    // return this.adresseIP;
+    // }
 
     public void setAdresseIP(String adresseIP) {
         this.adresseIP = adresseIP;
     }
+    // public void setAdresseIP(String adresseIP) {
+    // this.adresseIP = adresseIP;
+    // }
 
     public int getPort() {
         return this.port;
     }
+    // public int getPort() {
+    // return this.port;
+    // }
 
     public void setPort(int port) {
         this.port = port;
     }
+    // public void setPort(int port) {
+    // this.port = port;
+    // }
 
     public String getProtocole() {
         return this.protocole;
     }
+    // public String getProtocole() {
+    // return this.protocole;
+    // }
 
     public void setProtocole(String protocole) {
         this.protocole = protocole;
     }
+    // public void setProtocole(String protocole) {
+    // this.protocole = protocole;
+    // }
 
     // ==================== Méthodes ====================
     public void afficher() { // Affiche les informations du client
@@ -73,41 +97,43 @@ public class client {
         System.out.println("Protocole : " + this.protocole);
     }
 
-    public void envoyer() { // Envoie un message au serveur
+    public void envoyer(String msg) { // Envoie un message au serveur
         try {
             Socket socket = new Socket(this.adresseIP, this.port);
+
             OutputStream os = socket.getOutputStream();
-            os.write("Hello".getBytes());
+            ObjectOutputStream oos = new ObjectOutputStream(os);
+
+            oos.writeObject(msg);
+            oos.flush();
+
+            InputStream is = socket.getInputStream();
+            ObjectInputStream ois = new ObjectInputStream(is);
+
+            String message = (String) ois.readObject();
+            System.out.println("Serveur : " + message);
+
+            ois.close();
+            is.close();
+            oos.close();
             os.close();
             socket.close();
         } catch (Exception e) {
-            System.out.println(e);
+            System.out.println("Erreur : " + e.getMessage());
         }
     }
 
-    // public void envoyer() {
-    // Socket s = null;
-    // try {
-    // // Création d'un socket client
-    // s = new Socket(this.adresseIP, this.port);
+    public boolean envoyerMessage() { // Demande à l'utilisateur de saisir un message et l'envoie au serveur
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Saisir un message : ");
+        String msg = sc.nextLine();
 
-    // // Création d'un flux de sortie
-    // InputStream is = s.getInputStream();
-    // OutputStream os = s.getOutputStream();
-
-    // ObjectInputStream ois = new ObjectInputStream(is);
-    // ObjectOutputStream oos = new ObjectOutputStream(os);
-
-    // // Envoi d'un message
-    // oos.writeObject("Hello");
-
-    // // Fermeture des flux et du socket
-    // ois.close();
-    // oos.close();
-    // s.close();
-
-    // } catch (Exception e) {
-    // System.out.println(e);
-    // }
-    // }
+        if (msg.equals("exit")) {
+            System.out.println("Exit en cours...");
+            return true;
+        } else {
+            this.envoyer(msg);
+            return false;
+        }
+    }
 }
