@@ -15,21 +15,14 @@ import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.List;
 
 public class serveur {
-    public static void main(String[] args) {
-        serveur serveur1 = new serveur("Serveur1", "192.168.1.9", 8003, "HTTP");
-
-        serveur1.afficher();
-        serveur1.ecouter();
-    }
-
     // ==================== Attributs ====================
-    protected int serverPort = 8003;
-    protected ServerSocket serverSocket = null;
-    protected boolean isStopped = false;
-    protected Thread runningThread = null;
+    private static int serverPort = 8010;
+
+    private static ArrayList<Object> listeSend = new ArrayList<Object>();
+    private static ArrayList<Object> listeReceive = new ArrayList<Object>();
+
     private String nom;
     private String adresseIP;
     private int port;
@@ -43,39 +36,6 @@ public class serveur {
         this.protocole = protocole;
     }
 
-    // ==================== GETTERS & SETTERS ====================
-    public String getNom() {
-        return this.nom;
-    }
-
-    public void setNom(String nom) {
-        this.nom = nom;
-    }
-
-    // public String getAdresseIP() {
-    // return this.adresseIP;
-    // }
-
-    // public void setAdresseIP(String adresseIP) {
-    // this.adresseIP = adresseIP;
-    // }
-
-    // public int getPort() {
-    // return this.port;
-    // }
-
-    // public void setPort(int port) {
-    // this.port = port;
-    // }
-
-    // public String getProtocole() {
-    // return this.protocole;
-    // }
-
-    // public void setProtocole(String protocole) {
-    // this.protocole = protocole;
-    // }
-
     // ==================== Méthodes ====================
     public void afficher() { // Affiche les informations du serveur
         System.out.println("Nom : " + this.nom);
@@ -84,104 +44,46 @@ public class serveur {
         System.out.println("Protocole : " + this.protocole);
     }
 
-    public void ecouter() { // Ecoute le port du serveur
-        synchronized (this) {
-            this.runningThread = Thread.currentThread();
-        }
-        openServerSocket();
-        while (!isStopped()) {
-            Socket clientSocket = null;
-            try {
-                clientSocket = this.serverSocket.accept();
-            } catch (Exception e) {
-                if (isStopped()) {
-                    System.out.println("Serveur arrêté.");
-                    return;
-                }
-                throw new RuntimeException("Erreur lors de l'acceptation de la connexion client", e);
-            }
-            new Thread(new WorkerRunnable(clientSocket, "Multithreaded Server")).start(); // Création d'un thread pour
-                                                                                          // chaque client
-        }
-        System.out.println("Serveur arrêté.");
-    }
+    public static void main(String[] args) {
 
-    private synchronized boolean isStopped() { // Vérifie si le serveur est arrêté ou non
-        return this.isStopped;
-    }
+        for (int i = 0; i < 30; i++) {
+            Point p = new Point(i, i);
+            Segment s = new Segment(p, p);
 
-    public synchronized void stop() { // Arrête le serveur et ferme le socket
-        this.isStopped = true;
+            listeSend.add(p);
+            listeSend.add(s);
+        }
+
+        ServerSocket ecoute;
+
         try {
-            this.serverSocket.close();
-        } catch (Exception e) {
-            throw new RuntimeException("Erreur lors de la fermeture du servicer", e);
-        }
-    }
+            ecoute = new ServerSocket(serverPort);
+            System.out.println("Lancement du serveur sur le port " + serverPort);
 
-    private void openServerSocket() {
-        try {
-            this.serverSocket = new ServerSocket(this.serverPort);
-        } catch (Exception e) {
-            throw new RuntimeException("Impossible d'ouvrir le port 8003", e);
-        }
-    }
+            while (true) {
+                System.out.println("Serveur en attente de connexion");
+                Socket client = ecoute.accept();
+                System.out.println("Connexion établie avec " + client.getInetAddress());
 
-    // ==================== Classe interne ====================
+                // Envoi
+                OutputStream os = client.getOutputStream();
+                ObjectOutputStream oos = new ObjectOutputStream(os);
+                oos.writeObject(listeSend);
+                oos.flush();
 
-    public static class WorkerRunnable implements Runnable { // Classe interne pour gérer les threads
+                // Réception
+                InputStream is = client.getInputStream();
+                ObjectInputStream ois = new ObjectInputStream(is);
+                listeReceive = (ArrayList<Object>) ois.readObject();
 
-        protected Socket clientSocket = null;
-        protected String serverText = null;
-
-        public WorkerRunnable(Socket clientSocket, String serverText) {
-            this.clientSocket = clientSocket;
-            this.serverText = serverText;
-        }
-
-        public void run() {
-            List<serveur> listeObjets = new ArrayList<serveur>();
-            try {
-                InputStream input = clientSocket.getInputStream();
-                OutputStream output = clientSocket.getOutputStream();
-                ObjectInputStream ois = new ObjectInputStream(input);
-                ObjectOutputStream oos = new ObjectOutputStream(output);
-
-                String message = (String) ois.readObject();
-                System.out.println("Message reçu : " + message);
-
-                if (message.equals("GET")) {
-                    oos.writeObject(listeObjets);
-                    oos.flush();
-                } else if (message.equals("POST")) {
-                    serveur objet = (serveur) ois.readObject();
-                    listeObjets.add(objet);
-                    oos.writeObject("Objet ajouté");
-                    oos.flush();
-                } else if (message.equals("PUT")) {
-                    serveur objet = (serveur) ois.readObject();
-                    listeObjets.set(listeObjets.indexOf(objet), objet);
-                    oos.writeObject("Objet modifié");
-                    oos.flush();
-                } else if (message.equals("DELETE")) {
-                    serveur objet = (serveur) ois.readObject();
-                    listeObjets.remove(objet);
-                    oos.writeObject("Objet supprimé");
-                    oos.flush();
-                } else {
-                    oos.writeObject("Commande inconnue");
-                    oos.flush();
-                }
+                System.out.println("Liste reçue : " + listeReceive);
 
                 ois.close();
                 oos.close();
-                input.close();
-                output.close();
-                System.out.println("Fermeture du socket client");
-                clientSocket.close();
-            } catch (Exception e) {
-                e.printStackTrace();
+                client.close();
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

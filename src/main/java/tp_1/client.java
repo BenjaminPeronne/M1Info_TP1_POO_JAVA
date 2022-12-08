@@ -12,123 +12,178 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Field;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class client {
-    public static void main(String[] args) {
-        // Création du client
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Saisir le nom du client : ");
-        String nom = sc.nextLine();
-
-        // // Création du client
-        client client1 = new client(nom, "192.168.1.9", 8003, "HTTP");
-
-        client1.afficher();
-
-        while (!client1.envoyerMessage()) {
-        }
-
-        sc.close();
-    }
 
     // ==================== Attributs ====================
-    private String nom;
-    private String adresseIP;
-    private int port;
-    private String protocole;
+    private static int serverPort = 8010;
+    // private String nom;
+    // private String adresseIP;
+    // private String protocole;
 
     // ==================== Constructeur ====================
-    public client(String nom, String adresseIP, int port, String protocole) {
-        this.nom = nom;
-        this.adresseIP = adresseIP;
-        this.port = port;
-        this.protocole = protocole;
-    }
-
-    // ==================== GETTERS & SETTERS ====================
-    // public String getNom() {
-    // return this.nom;
-    // }
-    public String getNom() {
-        return this.nom;
-    }
-
-    // public void setNom(String nom) {
+    // public client(String nom, String adresseIP, int serverPort, String protocole)
+    // {
     // this.nom = nom;
-    // }
-
-    // public String getAdresseIP() {
-    // return this.adresseIP;
-    // }
-
-    // public void setAdresseIP(String adresseIP) {
     // this.adresseIP = adresseIP;
-    // }
-
-    // public int getPort() {
-    // return this.port;
-    // }
-
-    // public void setPort(int port) {
-    // this.port = port;
-    // }
-
-    // public String getProtocole() {
-    // return this.protocole;
-    // }
-
-    // public void setProtocole(String protocole) {
+    // this.serverPort = serverPort;
     // this.protocole = protocole;
     // }
 
     // ==================== Méthodes ====================
-    public void afficher() { // Affiche les informations du client
-        System.out.println("Nom : " + this.nom);
-        System.out.println("Adresse IP : " + this.adresseIP);
-        System.out.println("Port : " + this.port);
-        System.out.println("Protocole : " + this.protocole);
+    // public void afficher() { // Affiche les informations du client
+    // System.out.println("Nom : " + this.nom);
+    // System.out.println("Adresse IP : " + this.adresseIP);
+    // System.out.println("Port : " + this.serverPort);
+    // System.out.println("Protocole : " + this.protocole);
+    // }
+
+    public static void input(Object obj) {
+        Scanner sc = new Scanner(System.in);
+
+        ArrayList<String> listeTypeObjet = new ArrayList<String>(
+                Arrays.asList("int", "double", "float", "long", "short", "byte", "boolean", "char"));
+
+        for (Field f : obj.getClass().getDeclaredFields()) {
+            // f.setAccessible(true);
+            System.out.println(f.getType().getSimpleName() + " : " + f.getName() + "\n");
+            if (listeTypeObjet.contains(f.getType().getSimpleName())) {
+                System.out.println("Veuillez saisir un " + f.getType().getSimpleName());
+                boolean isValide = false;
+
+                switch (f.getType().getSimpleName()) {
+                    case "int":
+                        while (!isValide) {
+                            try {
+                                f.set(obj, sc.nextInt());
+                                isValide = true;
+                            } catch (Exception e) {
+                                System.out.println("Veuillez saisir un entier");
+                                sc.next();
+                            }
+                        }
+                        break;
+                    case "double":
+                        while (!isValide) {
+                            try {
+                                f.set(obj, sc.nextDouble());
+                                isValide = true;
+                            } catch (Exception e) {
+                                System.out.println("Veuillez saisir un double");
+                                sc.next();
+                            }
+                        }
+                        break;
+                    case "float":
+                        while (!isValide) {
+                            try {
+                                f.set(obj, sc.nextFloat());
+                                isValide = true;
+                            } catch (Exception e) {
+                                System.out.println("Veuillez saisir un float");
+                                sc.next();
+                            }
+                        }
+                        break;
+                    // case "long":
+                    //     while (!isValide) {
+                    //         try {
+                    //             f.set(obj, sc.nextLong());
+                    //             isValide = true;
+                    //         } catch (Exception e) {
+                    //             System.out.println("Veuillez saisir un long");
+                    //             sc.next();
+                    //         }
+                    //     }
+                    //     break;
+                    case "short":
+                        while (!isValide) {
+                            try {
+                                f.set(obj, sc.nextShort());
+                                isValide = true;
+                            } catch (Exception e) {
+                                System.out.println("Veuillez saisir un short");
+                                sc.next();
+                            }
+                        }
+                        break;
+                    case "byte":
+                        while (!isValide) {
+                            try {
+                                f.set(obj, sc.nextByte());
+                                isValide = true;
+                            } catch (Exception e) {
+                                System.out.println("Veuillez saisir un byte");
+                                sc.next();
+                            }
+                        }
+                        break;
+                    case "boolean":
+                        while (!isValide) {
+                            try {
+                                f.set(obj, sc.nextBoolean());
+                                isValide = true;
+                            } catch (Exception e) {
+                                System.out.println("Veuillez saisir un boolean");
+                                sc.next();
+                            }
+                        }
+                        break;
+                    case "char":
+                        while (!isValide) {
+                            try {
+                                f.set(obj, sc.next().charAt(0));
+                                isValide = true;
+                            } catch (Exception e) {
+                                System.out.println("Veuillez saisir un char");
+                                sc.next();
+                            }
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
     }
 
-    public void envoyerObjet(Object objet) {
+    // ==================== Main ====================
+    public static void main(String[] args) {
+        Socket socketClient = null;
+
         try {
-            Socket socket = new Socket(this.adresseIP, this.port);
+            // Création du client
+            socketClient = new Socket("localhost", serverPort);
+            System.out.println("Connexion établie");
 
-            OutputStream os = socket.getOutputStream();
+            // Création des flux d'entrée et de sortie
+            OutputStream os = socketClient.getOutputStream();
             ObjectOutputStream oos = new ObjectOutputStream(os);
-
-            oos.writeObject(objet);
-            oos.flush();
-
-            InputStream is = socket.getInputStream();
+            InputStream is = socketClient.getInputStream();
             ObjectInputStream ois = new ObjectInputStream(is);
 
-            String message = (String) ois.readObject();
-            System.out.println("Serveur : " + message);
+            // Lecture d'un objet
+            System.out.println("Lecture d'un objet");
+            Object obj = (Object) ois.readObject();
+            System.out.println(obj);
 
-            ois.close();
-            is.close();
+            // Ecriture d'un objet
+            System.out.println("Ecriture d'un objet");
+            input(obj);
+            oos.writeObject(obj);
+
+            // Fermeture des flux et du socket
+            socketClient.close();
             oos.close();
-            os.close();
-            socket.close();
+            ois.close();
+
         } catch (Exception e) {
-            System.out.println("Erreur : " + e.getMessage());
+            e.printStackTrace();
         }
-    }
-
-    public boolean envoyerMessage() { // Demande à l'utilisateur de saisir un message et l'envoie au serveur
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Saisir un message : ");
-        String message = sc.nextLine();
-
-        if (message.equals("exit")) {
-            sc.close();
-            return true;
-        }
-
-        this.envoyerObjet(message);
-
-        return false;
     }
 }
