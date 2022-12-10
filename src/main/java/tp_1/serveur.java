@@ -46,7 +46,7 @@ public class serveur {
 
     public static void main(String[] args) {
 
-        for (int i = 0; i < 30; i++) {
+        for (int i = 0; i < 10; i++) {
             Point p = new Point(i, i);
             Segment s = new Segment(p, p);
 
