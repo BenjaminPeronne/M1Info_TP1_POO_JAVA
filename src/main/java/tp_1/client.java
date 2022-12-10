@@ -9,6 +9,7 @@
 package tp_1;
 
 import java.awt.Component;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -329,6 +330,53 @@ public class client {
         }
     }
 
+    public static void setValIntoGUI(Object obj, GUI gui, ArrayList<JPanel> listePanel, ObjectOutputStream oos,
+            Socket socketClient) {
+        ArrayList<String> listeObjet = new ArrayList<String>( // Liste des types
+                Arrays.asList("String", "char", "int", "Integer", "Double", "double", "Boolean", "boolean", "float",
+                        "Float", "Short", "short", "Long", "long", "Byte", "byte"));
+
+        ArrayList<Component> listeComponent = new ArrayList<Component>();
+        for (Component c : listePanel.get(0).getComponents()) {
+            listeComponent.add(c);
+        }
+
+        for (Field f : obj.getClass().getDeclaredFields()) {
+            f.setAccessible(true);
+            if (listeObjet.contains(f.getType().getSimpleName())) {
+                try {
+                    f.set(obj, listeComponent.get(1).toString());
+                    listeComponent.remove(0);
+                    listeComponent.remove(0);
+                } catch (IllegalArgumentException | IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                try {
+                    Object obj2 = f.getType().getDeclaredConstructor().newInstance();
+                    setValIntoGUI(obj2, gui, listePanel, oos, socketClient);
+                } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+                        | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public static void sendObjectInObject(Object obj, ObjectOutputStream oos, Socket socketClient) {
+        try {
+            oos.writeObject(obj);
+            oos.flush();
+        } catch (IOException e) {
+            System.out.println("Erreur lors de l'envoi de l'objet");
+            try {
+                socketClient.close();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        }
+    }
+
     // ==================== Main ====================
     public static void main(String[] args) {
         Socket socketClient = null;
@@ -360,27 +408,27 @@ public class client {
                 System.out.println("Objet envoyé");
                 oos.writeObject(obj);
 
-            //     GUI gui = new GUI();
-            //     gui.fenetre.setTitle(obj.getClass().getSimpleName());
-            //     graphiqueInput(obj, gui);
-            //     gui.contenu.add(gui.btnok);
-            //     gui.fenetre.pack();
-            //     ArrayList<JPanel> jpanel = new ArrayList<JPanel>();
-            //     for (Component c : gui.contenu.getComponents()) {
-            //         if (c.getClass().getSimpleName().equals("JPanel")) {
-            //             jpanel.add((JPanel) c);
-            //         }
-            //     }
-            //     for (JPanel p : jpanel) {
-            //         for (Component c : p.getComponents()) {
-            //             if (c.getClass().getSimpleName().equals("JTextField")) {
-            //                 JTextField tf = (JTextField) c;
-            //                 System.out.println(tf.getText());
-            //             }
-            //         }
-            //     }
+                GUI gui = new GUI();
+                gui.fenetre.setTitle(obj.getClass().getSimpleName());
+                // graphiqueInput(obj, gui);
+                gui.contenu.add(gui.btnok);
+                gui.fenetre.pack();
+                ArrayList<JPanel> jpanel = new ArrayList<JPanel>();
+                for (Component c : gui.contenu.getComponents()) {
+                    if (c.getClass().getSimpleName().equals("JPanel")) {
+                        jpanel.add((JPanel) c);
+                    }
+                }
+                for (JPanel p : jpanel) {
+                    for (Component c : p.getComponents()) {
+                        if (c.getClass().getSimpleName().equals("JTextField")) {
+                            JTextField tf = (JTextField) c;
+                            System.out.println(tf.getText());
+                        }
+                    }
+                }
             }
-
+            
             // Fermeture des flux et du socket
             socketClient.close();
             oos.close();
