@@ -8,11 +8,13 @@
 
 package tp_1;
 
+import java.awt.Component;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -56,9 +58,12 @@ public class client {
                 Arrays.asList("String", "char", "int", "Integer", "Double", "double", "Boolean", "boolean", "float",
                         "Float", "Short", "short", "Long", "long", "Byte", "byte"));
 
+        // Object valObject = null;
+
         for (Field f : obj.getClass().getFields()) { // Parcours des attributs de la classe
             System.out.println(f.getType().getSimpleName() + " : " + f.getName() + "\n");
-            if (listeTypeObjet.contains(f.getType().getSimpleName())) { // Si le type de l'attribut est dans la liste des types
+            if (listeTypeObjet.contains(f.getType().getSimpleName())) { // Si le type de l'attribut est dans la liste
+                                                                        // des types
                 // System.out.println("Veuillez saisir un " + f.getType().getSimpleName());
                 System.out.println("Veuillez saisir un " + f.getName() + "\n");
                 boolean isValide = false; // Permet de savoir si la saisie est valide
@@ -67,26 +72,28 @@ public class client {
                     case "String" -> {
                         isValide = false;
                         do { // Tant que la saisie n'est pas valide
-                            try { 
+                            try {
                                 f.set(obj, sc.nextLine());
+                                // valObject = sc.nextLine();
                             } catch (InputMismatchException e) {
                                 isValide = true;
                                 sc.nextLine();
                                 System.out.println("Veuillez saisir un String");
                             }
-                        } while (!isValide);
+                        } while (isValide);
                     }
                     case "char" -> {
                         isValide = false;
                         do {
                             try {
                                 f.set(obj, sc.nextLine().charAt(0));
+                                // valObject = sc.nextLine().charAt(0);
                             } catch (InputMismatchException e) {
                                 isValide = true;
                                 sc.nextLine();
                                 System.out.println("Veuillez saisir un char");
                             }
-                        } while (!isValide);
+                        } while (isValide);
                     }
 
                     case "int" -> {
@@ -94,12 +101,13 @@ public class client {
                         do {
                             try {
                                 f.set(obj, sc.nextInt());
+                                // valObject = sc.nextInt();
                             } catch (InputMismatchException e) {
                                 isValide = true;
                                 sc.nextLine();
                                 System.out.println("Veuillez saisir un int");
                             }
-                        } while (!isValide);
+                        } while (isValide);
                     }
 
                     case "Integer" -> {
@@ -107,12 +115,13 @@ public class client {
                         do {
                             try {
                                 f.set(obj, sc.nextInt());
+                                // valObject = sc.nextInt();
                             } catch (InputMismatchException e) {
                                 isValide = true;
                                 sc.nextLine();
                                 System.out.println("Veuillez saisir un Integer");
                             }
-                        } while (!isValide);
+                        } while (isValide);
                     }
 
                     case "Double" -> {
@@ -120,12 +129,13 @@ public class client {
                         do {
                             try {
                                 f.set(obj, sc.nextDouble());
+                                // valObject = sc.nextDouble();
                             } catch (InputMismatchException e) {
                                 isValide = true;
                                 sc.nextLine();
                                 System.out.println("Veuillez saisir un Double");
                             }
-                        } while (!isValide);
+                        } while (isValide);
                     }
 
                     case "double" -> {
@@ -133,12 +143,13 @@ public class client {
                         do {
                             try {
                                 f.set(obj, sc.nextDouble());
+                                // valObject = sc.nextDouble();
                             } catch (InputMismatchException e) {
                                 isValide = true;
                                 sc.nextLine();
                                 System.out.println("Veuillez saisir un double");
                             }
-                        } while (!isValide);
+                        } while (isValide);
                     }
 
                     case "Boolean" -> {
@@ -146,12 +157,13 @@ public class client {
                         do {
                             try {
                                 f.set(obj, sc.nextBoolean());
+                                // valObject = sc.nextBoolean();
                             } catch (InputMismatchException e) {
                                 isValide = true;
                                 sc.nextLine();
                                 System.out.println("Veuillez saisir un Boolean");
                             }
-                        } while (!isValide);
+                        } while (isValide);
                     }
 
                     case "boolean" -> {
@@ -159,12 +171,13 @@ public class client {
                         do {
                             try {
                                 f.set(obj, sc.nextBoolean());
+                                // valObject = sc.nextBoolean();
                             } catch (InputMismatchException e) {
                                 isValide = true;
                                 sc.nextLine();
                                 System.out.println("Veuillez saisir un boolean");
                             }
-                        } while (!isValide);
+                        } while (isValide);
                     }
 
                     case "float" -> {
@@ -172,12 +185,13 @@ public class client {
                         do {
                             try {
                                 f.set(obj, sc.nextFloat());
+                                // valObject = sc.nextFloat();
                             } catch (InputMismatchException e) {
                                 isValide = true;
                                 sc.nextLine();
                                 System.out.println("Veuillez saisir un float");
                             }
-                        } while (!isValide);
+                        } while (isValide);
                     }
 
                     case "Float" -> {
@@ -185,12 +199,13 @@ public class client {
                         do {
                             try {
                                 f.set(obj, sc.nextFloat());
+                                // valObject = sc.nextFloat();
                             } catch (InputMismatchException e) {
                                 isValide = true;
                                 sc.nextLine();
                                 System.out.println("Veuillez saisir un Float");
                             }
-                        } while (!isValide);
+                        } while (isValide);
                     }
 
                     case "Short" -> {
@@ -198,12 +213,13 @@ public class client {
                         do {
                             try {
                                 f.set(obj, sc.nextShort());
+                                // valObject = sc.nextShort();
                             } catch (InputMismatchException e) {
                                 isValide = true;
                                 sc.nextLine();
                                 System.out.println("Veuillez saisir un Short");
                             }
-                        } while (!isValide);
+                        } while (isValide);
                     }
 
                     case "short" -> {
@@ -211,12 +227,13 @@ public class client {
                         do {
                             try {
                                 f.set(obj, sc.nextShort());
+                                // valObject = sc.nextShort();
                             } catch (InputMismatchException e) {
                                 isValide = true;
                                 sc.nextLine();
                                 System.out.println("Veuillez saisir un short");
                             }
-                        } while (!isValide);
+                        } while (isValide);
                     }
 
                     case "Long" -> {
@@ -224,12 +241,13 @@ public class client {
                         do {
                             try {
                                 f.set(obj, sc.nextLong());
+                                // valObject = sc.nextLong();
                             } catch (InputMismatchException e) {
                                 isValide = true;
                                 sc.nextLine();
                                 System.out.println("Veuillez saisir un Long");
                             }
-                        } while (!isValide);
+                        } while (isValide);
                     }
 
                     case "long" -> {
@@ -237,12 +255,13 @@ public class client {
                         do {
                             try {
                                 f.set(obj, sc.nextLong());
+                                // valObject = sc.nextLong();
                             } catch (InputMismatchException e) {
                                 isValide = true;
                                 sc.nextLine();
                                 System.out.println("Veuillez saisir un long");
                             }
-                        } while (!isValide);
+                        } while (isValide);
                     }
 
                     case "Byte" -> {
@@ -250,12 +269,13 @@ public class client {
                         do {
                             try {
                                 f.set(obj, sc.nextByte());
+                                // valObject = sc.nextByte();
                             } catch (InputMismatchException e) {
                                 isValide = true;
                                 sc.nextLine();
                                 System.out.println("Veuillez saisir un Byte");
                             }
-                        } while (!isValide);
+                        } while (isValide);
                     }
 
                     case "byte" -> {
@@ -263,16 +283,18 @@ public class client {
                         do {
                             try {
                                 f.set(obj, sc.nextByte());
+                                // valObject = sc.nextByte();
                             } catch (InputMismatchException e) {
                                 isValide = true;
                                 sc.nextLine();
                                 System.out.println("Veuillez saisir un byte");
                             }
-                        } while (!isValide);
+                        } while (isValide);
                     }
 
                     default -> {
                         System.out.println("Type non pris en charge");
+                        // valObject = null;
                     }
                 }
             }
@@ -280,9 +302,9 @@ public class client {
     }
 
     public static void graphiqueInput(Object obj, GUI gui) { // Permet de créer un formulaire graphique
-        ArrayList<String> listeObjet = new ArrayList<String>(
-                Arrays.asList("String", "char", "Character", "int", "Integer", "Double", "double", "Boolean", "boolean",
-                        "float", "Float", "Short", "short", "Long", "long", "Byte", "byte"));
+        ArrayList<String> listeObjet = new ArrayList<String>( // Liste des types
+                Arrays.asList("String", "char", "int", "Integer", "Double", "double", "Boolean", "boolean", "float",
+                        "Float", "Short", "short", "Long", "long", "Byte", "byte"));
 
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -295,6 +317,14 @@ public class client {
                 JTextField textField = new JTextField(10);
                 panel.add(label);
                 panel.add(textField);
+            } else {
+                try {
+                    Object obj2 = f.getType().getDeclaredConstructor().newInstance();
+                    graphiqueInput(obj2, gui);
+                } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+                        | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -325,32 +355,30 @@ public class client {
             } else {
                 // Ecriture d'un objet
                 System.out.println("Ecriture d'un objet");
+                System.out.println("Objet de type : " + obj.getClass().getSimpleName());
                 input(obj);
-                oos.writeObject(obj);
-                
-                // Envoi d'un objet
-                System.out.println("Envoi d'un objet");
+                System.out.println("Objet envoyé");
                 oos.writeObject(obj);
 
-                // GUI gui = new GUI();
-                // gui.fenetre.setTitle(obj.getClass().getSimpleName());
-                // graphiqueInput(obj, gui);
-                // gui.contenu.add(gui.btnok);
-                // gui.fenetre.pack();
-                // ArrayList<JPanel> jpanel = new ArrayList<JPanel>();
-                // for (Component c : gui.contenu.getComponents()) {
-                //     if (c.getClass().getSimpleName().equals("JPanel")) {
-                //         jpanel.add((JPanel) c);
-                //     }
-                // }
-                // for (JPanel p : jpanel) {
-                //     for (Component c : p.getComponents()) {
-                //         if (c.getClass().getSimpleName().equals("JTextField")) {
-                //             JTextField tf = (JTextField) c;
-                //             System.out.println(tf.getText());
-                //         }
-                //     }
-                // }
+            //     GUI gui = new GUI();
+            //     gui.fenetre.setTitle(obj.getClass().getSimpleName());
+            //     graphiqueInput(obj, gui);
+            //     gui.contenu.add(gui.btnok);
+            //     gui.fenetre.pack();
+            //     ArrayList<JPanel> jpanel = new ArrayList<JPanel>();
+            //     for (Component c : gui.contenu.getComponents()) {
+            //         if (c.getClass().getSimpleName().equals("JPanel")) {
+            //             jpanel.add((JPanel) c);
+            //         }
+            //     }
+            //     for (JPanel p : jpanel) {
+            //         for (Component c : p.getComponents()) {
+            //             if (c.getClass().getSimpleName().equals("JTextField")) {
+            //                 JTextField tf = (JTextField) c;
+            //                 System.out.println(tf.getText());
+            //             }
+            //         }
+            //     }
             }
 
             // Fermeture des flux et du socket
