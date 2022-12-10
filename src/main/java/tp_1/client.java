@@ -8,7 +8,6 @@
 
 package tp_1;
 
-import java.awt.Component;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -50,13 +49,12 @@ public class client {
     // System.out.println("Protocole : " + this.protocole);
     // }
 
-    public static void input(Object obj) {
+    public static void input(Object obj) throws IllegalArgumentException, IllegalAccessException {
         Scanner sc = new Scanner(System.in);
 
         ArrayList<String> listeTypeObjet = new ArrayList<String>( // Liste des types
                 Arrays.asList("String", "char", "int", "Integer", "Double", "double", "Boolean", "boolean", "float",
                         "Float", "Short", "short", "Long", "long", "Byte", "byte"));
-        Object valObject = null; // Valeur de l'objet à saisir
 
         for (Field f : obj.getClass().getFields()) { // Parcours des attributs de la classe
             System.out.println(f.getType().getSimpleName() + " : " + f.getName() + "\n");
@@ -70,8 +68,7 @@ public class client {
                         isValide = false;
                         do { // Tant que la saisie n'est pas valide
                             try { 
-                                // f.set(obj, sc.nextLine());
-                                valObject = sc.nextLine();
+                                f.set(obj, sc.nextLine());
                             } catch (InputMismatchException e) {
                                 isValide = true;
                                 sc.nextLine();
@@ -83,8 +80,7 @@ public class client {
                         isValide = false;
                         do {
                             try {
-                                // f.set(obj, sc.nextLine().charAt(0));
-                                valObject = sc.nextLine().charAt(0);
+                                f.set(obj, sc.nextLine().charAt(0));
                             } catch (InputMismatchException e) {
                                 isValide = true;
                                 sc.nextLine();
@@ -97,8 +93,7 @@ public class client {
                         isValide = false;
                         do {
                             try {
-                                // f.set(obj, sc.nextInt());
-                                valObject = sc.nextInt();
+                                f.set(obj, sc.nextInt());
                             } catch (InputMismatchException e) {
                                 isValide = true;
                                 sc.nextLine();
@@ -111,8 +106,7 @@ public class client {
                         isValide = false;
                         do {
                             try {
-                                // f.set(obj, sc.nextInt());
-                                valObject = sc.nextInt();
+                                f.set(obj, sc.nextInt());
                             } catch (InputMismatchException e) {
                                 isValide = true;
                                 sc.nextLine();
@@ -125,8 +119,7 @@ public class client {
                         isValide = false;
                         do {
                             try {
-                                // f.set(obj, sc.nextDouble());
-                                valObject = sc.nextDouble();
+                                f.set(obj, sc.nextDouble());
                             } catch (InputMismatchException e) {
                                 isValide = true;
                                 sc.nextLine();
@@ -139,8 +132,7 @@ public class client {
                         isValide = false;
                         do {
                             try {
-                                // f.set(obj, sc.nextDouble());
-                                valObject = sc.nextDouble();
+                                f.set(obj, sc.nextDouble());
                             } catch (InputMismatchException e) {
                                 isValide = true;
                                 sc.nextLine();
@@ -153,8 +145,7 @@ public class client {
                         isValide = false;
                         do {
                             try {
-                                // f.set(obj, sc.nextBoolean());
-                                valObject = sc.nextBoolean();
+                                f.set(obj, sc.nextBoolean());
                             } catch (InputMismatchException e) {
                                 isValide = true;
                                 sc.nextLine();
@@ -167,8 +158,7 @@ public class client {
                         isValide = false;
                         do {
                             try {
-                                // f.set(obj, sc.nextBoolean());
-                                valObject = sc.nextBoolean();
+                                f.set(obj, sc.nextBoolean());
                             } catch (InputMismatchException e) {
                                 isValide = true;
                                 sc.nextLine();
@@ -181,8 +171,7 @@ public class client {
                         isValide = false;
                         do {
                             try {
-                                // f.set(obj, sc.nextFloat());
-                                valObject = sc.nextFloat();
+                                f.set(obj, sc.nextFloat());
                             } catch (InputMismatchException e) {
                                 isValide = true;
                                 sc.nextLine();
@@ -195,8 +184,7 @@ public class client {
                         isValide = false;
                         do {
                             try {
-                                // f.set(obj, sc.nextFloat());
-                                valObject = sc.nextFloat();
+                                f.set(obj, sc.nextFloat());
                             } catch (InputMismatchException e) {
                                 isValide = true;
                                 sc.nextLine();
@@ -209,8 +197,7 @@ public class client {
                         isValide = false;
                         do {
                             try {
-                                // f.set(obj, sc.nextShort());
-                                valObject = sc.nextShort();
+                                f.set(obj, sc.nextShort());
                             } catch (InputMismatchException e) {
                                 isValide = true;
                                 sc.nextLine();
@@ -223,8 +210,7 @@ public class client {
                         isValide = false;
                         do {
                             try {
-                                // f.set(obj, sc.nextShort());
-                                valObject = sc.nextShort();
+                                f.set(obj, sc.nextShort());
                             } catch (InputMismatchException e) {
                                 isValide = true;
                                 sc.nextLine();
@@ -237,8 +223,7 @@ public class client {
                         isValide = false;
                         do {
                             try {
-                                // f.set(obj, sc.nextLong());
-                                valObject = sc.nextLong();
+                                f.set(obj, sc.nextLong());
                             } catch (InputMismatchException e) {
                                 isValide = true;
                                 sc.nextLine();
@@ -251,8 +236,7 @@ public class client {
                         isValide = false;
                         do {
                             try {
-                                // f.set(obj, sc.nextLong());
-                                valObject = sc.nextLong();
+                                f.set(obj, sc.nextLong());
                             } catch (InputMismatchException e) {
                                 isValide = true;
                                 sc.nextLine();
@@ -265,8 +249,7 @@ public class client {
                         isValide = false;
                         do {
                             try {
-                                // f.set(obj, sc.nextByte());
-                                valObject = sc.nextByte();
+                                f.set(obj, sc.nextByte());
                             } catch (InputMismatchException e) {
                                 isValide = true;
                                 sc.nextLine();
@@ -279,8 +262,7 @@ public class client {
                         isValide = false;
                         do {
                             try {
-                                // f.set(obj, sc.nextByte());
-                                valObject = sc.nextByte();
+                                f.set(obj, sc.nextByte());
                             } catch (InputMismatchException e) {
                                 isValide = true;
                                 sc.nextLine();
@@ -291,7 +273,6 @@ public class client {
 
                     default -> {
                         System.out.println("Type non pris en charge");
-                        valObject = null;
                     }
                 }
             }
