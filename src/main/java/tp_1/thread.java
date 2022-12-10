@@ -1,3 +1,11 @@
+/**
+ * @author Benjamin Peronne
+ * @email contact@benjaminperonne.fr
+ * @create date 2022-11-24 01:36:41
+ * @modify date 2022-11-24 01:36:41
+ * @desc [TP1 - thread]
+ */
+
 package tp_1;
 
 import java.io.InputStream;

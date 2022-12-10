@@ -1,3 +1,11 @@
+/**
+ * @author Benjamin Peronne
+ * @email contact@benjaminperonne.fr
+ * @create date 2022-12-7 22:19:31
+ * @modify date 2022-12-7 22:19:31
+ * @desc [TP1 - GUI]
+ */
+
 package tp_1;
 
 import javax.swing.*;
@@ -31,44 +39,55 @@ public class GUI {
         NumberFormatter formatter = new NumberFormatter(format);
 
         switch (type) {
-            case "int":
+            case "int" -> {
                 champ = new JFormattedTextField(formatter);
                 break;
-            case "double":
-                champ = new JFormattedTextField(formatter);
-                break;
+            }
 
-            case "float":
+            case "double" -> {
                 champ = new JFormattedTextField(formatter);
                 break;
+            }
 
-            case "long":
+            case "float" -> {
                 champ = new JFormattedTextField(formatter);
                 break;
+            }
 
-            case "short":
+            case "long" -> {
                 champ = new JFormattedTextField(formatter);
                 break;
+            }
 
-            case "byte":
+            case "short" -> {
                 champ = new JFormattedTextField(formatter);
                 break;
+            }
 
-            case "boolean":
+            case "byte" -> {
+                champ = new JFormattedTextField(formatter);
+                break;
+            }
+
+            case "boolean" -> {
                 champ = new JCheckBox();
                 break;
+            }
 
-            case "char":
+            case "char" -> {
                 champ = new JTextField();
                 break;
+            }
 
-            case "String":
+            case "String" -> {
                 champ = new JTextField();
                 break;
+            }
 
-            default:
+            default -> {
                 champ = new JTextField();
                 break;
+            }
         }
 
         label.setLabelFor(champ);
@@ -79,7 +98,7 @@ public class GUI {
     }
 
     // public static void main(String[] args) {
-    //     GUI gui = new GUI();
+    // GUI gui = new GUI();
     // }
 
 }
